@@ -1,19 +1,15 @@
-'''import urllib.request, urllib.parse, urllib.error
-
-img = urllib.request.urlopen('http://data.pr4e.org/cover3.jpg').read()
-fhand = open('cover3.jpg', 'wb')
-fhand.write(img)
-fhand.close()'''
+# Search for link values within URL input
 import urllib.request, urllib.parse, urllib.error
+import re
+import ssl
 
-img = urllib.request.urlopen('http://data.pr4e.org/cover3.jpg')
-fhand = open('cover3.jpg', 'wb')
-size = 0
-while True:
-    info = img.read(100000)
-    if len(info) < 1: break
-    size = size + len(info)
-    fhand.write(info)
+# Ignore SSL certificate errors
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
 
-print(size, 'characters copied.')
-fhand.close()
+url = 'https://docs.python.org'#input('Enter - ')
+html = urllib.request.urlopen(url, context=ctx).read()
+links = re.findall(b'href="(http[s]?://.*?)"', html)
+for link in links:
+    print(link.decode())
